@@ -1,7 +1,3 @@
-use std::ops::Index;
-
-
-
 const INITIAL_NUM_SEGMENTS: usize = 100;
 
 pub struct UmSegments {
@@ -27,7 +23,7 @@ impl UmSegments {
 
     /// Allocates a new segment of the given size and returns the index of the
     /// segment.
-    /// 
+    ///
     /// The allocated segment is initialized to all zeros.
     pub fn alloc(&mut self, size: usize) -> usize {
         let new_segment = vec![0; size];
@@ -47,10 +43,19 @@ impl UmSegments {
     }
 
     /// Returns a reference to the segment at the given index.
-    /// 
+    ///
     /// # Panics
     ///     Panics if the index is out of bounds.
     pub fn get(&self, index: usize) -> &Vec<u32> {
         &self.segments[index]
+    }
+
+    /// Replaces the segment at the given index with the given segment.
+    ///
+    /// # Panics
+    ///    Panics if the index is out of bounds.
+    pub fn replace(&mut self, index: usize, segment: Vec<u32>) -> Vec<u32> {
+        self.segments.push(segment);
+        self.segments.swap_remove(index)
     }
 }

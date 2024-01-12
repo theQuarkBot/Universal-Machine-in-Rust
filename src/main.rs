@@ -4,10 +4,10 @@ use std::env;
 use std::process::exit;
 
 mod um_load;
-mod umsegments;
+mod um_segments;
 
 use um_load::*;
-use umsegments::*;
+use um_segments::*;
 
 const NUM_REGISTERS: usize = 8;
 
@@ -54,36 +54,42 @@ fn um_run(program: Vec<u32>) {
         program_counter += 1;
         let opcode: OpCode = num::FromPrimitive::from_u32(instruction >> 28).unwrap();
 
+        let a = ((instruction >> 6) & 0x7) as usize;
+        let b = ((instruction >> 3) & 0x7) as usize;
+        let c = (instruction & 0x7) as usize;
+
         match opcode {
             OpCode::CMOV => {
-                todo!();
+                if registers[c] != 0 {
+                    registers[a] = registers[b];
+                }
             }
             OpCode::SLOAD => {
-                todo!();
+                registers[a] = env.get(registers[b] as usize)[registers[c] as usize];
             }
             OpCode::SSTORE => {
-                todo!();
+                env.get(registers[a] as usize)[registers[b] as usize] = registers[c];
             }
             OpCode::ADD => {
-                todo!();
+                registers[a] = registers[b] + registers[c];
             }
             OpCode::MUL => {
-                todo!();
+                registers[a] = registers[b] * registers[c];
             }
             OpCode::DIV => {
-                todo!();
+                registers[a] = registers[b] / registers[c];
             }
             OpCode::NAND => {
-                todo!();
+                registers[a] = !(registers[b] & registers[c]);
             }
             OpCode::HALT => {
-                todo!();
+                return;
             }
             OpCode::ALLOC => {
-                todo!();
+                registers[a] = env.alloc(registers[c] as usize) as u32;
             }
             OpCode::FREE => {
-                todo!();
+                env.free(registers[c] as usize);
             }
             OpCode::INPUT => {
                 todo!();
@@ -92,10 +98,14 @@ fn um_run(program: Vec<u32>) {
                 todo!();
             }
             OpCode::LOADP => {
-                todo!();
+                let segment = env.get(registers[b] as usize).clone();
+                env.replace(0, segment);
+                program_counter = registers[c] as usize;
             }
             OpCode::LOADV => {
-                todo!();
+                let a = ((instruction >> 25) & 0x7) as usize;
+                let value = instruction & 0x1ffffff;
+                registers[a] = value;
             }
         }
     }
