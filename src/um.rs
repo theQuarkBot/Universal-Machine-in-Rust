@@ -1,3 +1,5 @@
+use std::io::Read;
+
 use num_derive::FromPrimitive;
 // use num_traits::FromPrimitive;
 
@@ -36,7 +38,7 @@ impl OpCode {
 #[allow(unused_mut)]
 pub fn um_run(program: Vec<u32>) {
     let mut env = UmSegments::new_with_program(program);
-    let mut registers: [u32; NUM_REGISTERS] = [0; NUM_REGISTERS];
+    let mut registers: [u32; NUM_REGISTERS] = [0_u32; NUM_REGISTERS];
     let mut program_counter: usize = 0;
 
     // let seg_zero = env.get(0);
@@ -65,10 +67,10 @@ pub fn um_run(program: Vec<u32>) {
                 env.get(registers[a] as usize)[registers[b] as usize] = registers[c];
             }
             OpCode::ADD => {
-                registers[a] = registers[b] + registers[c];
+                registers[a] = registers[b].overflowing_add(registers[c]).0;
             }
             OpCode::MUL => {
-                registers[a] = registers[b] * registers[c];
+                registers[a] = registers[b].overflowing_mul(registers[c]).0;
             }
             OpCode::DIV => {
                 registers[a] = registers[b] / registers[c];
@@ -86,10 +88,12 @@ pub fn um_run(program: Vec<u32>) {
                 env.free(registers[c] as usize);
             }
             OpCode::INPUT => {
-                todo!();
+                let mut buf: [u8; 1] = [0_u8; 1];
+                std::io::stdin().read_exact(&mut buf).unwrap();
+                registers[c] = buf[0] as u32;
             }
             OpCode::OUTPUT => {
-                todo!();
+                print!("{}", registers[c] as u8 as char);
             }
             OpCode::LOADP => {
                 let segment = env.get(registers[b] as usize).clone();
