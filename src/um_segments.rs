@@ -1,8 +1,8 @@
 const INITIAL_NUM_SEGMENTS: usize = 100;
 
 pub struct UmSegments {
-    segments: Vec<Vec<u32>>,
-    free_list: Vec<usize>,
+    pub segments: Vec<Vec<u32>>,
+    pub free_list: Vec<usize>,
 }
 
 impl Default for UmSegments {
@@ -46,8 +46,8 @@ impl UmSegments {
     ///
     /// # Panics
     ///     Panics if the index is out of bounds.
-    pub fn get(&self, index: usize) -> &Vec<u32> {
-        &self.segments[index]
+    pub fn get(&mut self, index: usize) -> &mut Vec<u32> {
+        &mut self.segments[index]
     }
 
     /// Replaces the segment at the given index with the given segment.
