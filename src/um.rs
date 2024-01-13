@@ -60,8 +60,10 @@ pub fn um_run(program: Vec<u32>) {
                 }
             }
             OpCode::SLOAD => {
-                let segment = &env.segments[registers[b] as usize];
+                print!("LOADING:");
                 registers[a] = env.get(registers[b] as usize)[registers[c] as usize];
+                print!("{}", registers[a] as u8 as char);
+                print!("{}", env.get(registers[b] as usize)[registers[c] as usize] as u8);
             }
             OpCode::SSTORE => {
                 env.get(registers[a] as usize)[registers[b] as usize] = registers[c];
@@ -96,8 +98,10 @@ pub fn um_run(program: Vec<u32>) {
                 print!("{}", registers[c] as u8 as char);
             }
             OpCode::LOADP => {
-                let segment = env.get(registers[b] as usize).clone();
-                env.replace(0, segment);
+                if registers[b] != 0 {
+                    let segment = env.get(registers[b] as usize).clone();
+                    env.replace(0, segment);
+                }
                 program_counter = registers[c] as usize;
             }
             OpCode::LOADV => {
