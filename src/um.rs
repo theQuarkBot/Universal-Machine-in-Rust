@@ -1,4 +1,4 @@
-use std::{io::Read};
+use std::io::Read;
 
 use num_derive::FromPrimitive;
 // use num_traits::FromPrimitive;
@@ -110,8 +110,10 @@ pub fn um_run(program: Vec<u32>) {
             }
             OpCode::INPUT => {
                 let mut buf: [u8; 1] = [0_u8; 1];
-                std::io::stdin().read_exact(&mut buf).unwrap();
-                registers[c] = buf[0] as u32;
+                registers[c] = match std::io::stdin().read_exact(&mut buf) {
+                    Ok(_) => buf[0] as u32,
+                    Err(_) => 0xffffffff,
+                };
             }
             OpCode::OUTPUT => {
                 print!("{}", registers[c] as u8 as char);
