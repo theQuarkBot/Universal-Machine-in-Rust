@@ -1,4 +1,4 @@
-const INITIAL_NUM_SEGMENTS: usize = 100;
+const INITIAL_NUM_SEGMENTS: usize = 10000;
 
 pub struct UmSegments {
     pub segments: Vec<Vec<u32>>,

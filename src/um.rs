@@ -1,4 +1,4 @@
-use std::io::Read;
+use std::{io::Read};
 
 use num_derive::FromPrimitive;
 // use num_traits::FromPrimitive;
@@ -33,6 +33,28 @@ impl OpCode {
     }
 }
 
+// impl std::fmt::Display for OpCode:
+impl std::fmt::Display for OpCode {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            OpCode::CMOV => write!(f, "CMOV"),
+            OpCode::SLOAD => write!(f, "SLOAD"),
+            OpCode::SSTORE => write!(f, "SSTORE"),
+            OpCode::ADD => write!(f, "ADD"),
+            OpCode::MUL => write!(f, "MUL"),
+            OpCode::DIV => write!(f, "DIV"),
+            OpCode::NAND => write!(f, "NAND"),
+            OpCode::HALT => write!(f, "HALT"),
+            OpCode::ALLOC => write!(f, "ALLOC"),
+            OpCode::FREE => write!(f, "FREE"),
+            OpCode::OUTPUT => write!(f, "OUTPUT"),
+            OpCode::INPUT => write!(f, "INPUT"),
+            OpCode::LOADP => write!(f, "LOADP"),
+            OpCode::LOADV => write!(f, "LOADV"),
+        }
+    }
+}
+
 #[allow(dead_code)]
 #[allow(unused_variables)]
 #[allow(unused_mut)]
@@ -60,10 +82,7 @@ pub fn um_run(program: Vec<u32>) {
                 }
             }
             OpCode::SLOAD => {
-                print!("LOADING:");
                 registers[a] = env.get(registers[b] as usize)[registers[c] as usize];
-                print!("{}", registers[a] as u8 as char);
-                print!("{}", env.get(registers[b] as usize)[registers[c] as usize] as u8);
             }
             OpCode::SSTORE => {
                 env.get(registers[a] as usize)[registers[b] as usize] = registers[c];
@@ -84,7 +103,7 @@ pub fn um_run(program: Vec<u32>) {
                 return;
             }
             OpCode::ALLOC => {
-                registers[a] = env.alloc(registers[c] as usize) as u32;
+                registers[b] = env.alloc(registers[c] as usize) as u32;
             }
             OpCode::FREE => {
                 env.free(registers[c] as usize);
