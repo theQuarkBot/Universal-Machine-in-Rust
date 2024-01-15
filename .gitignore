@@ -1,0 +1,20 @@
+codex.umz
+sandmark.umz
+advent.umz
+README
+hello.um
+midmark.um
+cat.um
+sandmark.out
+
+# Rust
+target/
+
+# JetBrains
+.idea/
+
+# VSCode
+.vscode/
+
+# macOS crud
+.DS_Store

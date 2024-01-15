@@ -1,8 +1,8 @@
 const INITIAL_NUM_SEGMENTS: usize = 10000;
 
 pub struct UmSegments {
-    pub segments: Vec<Vec<u32>>,
-    pub free_list: Vec<usize>,
+    segments: Vec<Vec<u32>>,
+    free_list: Vec<usize>,
 }
 
 impl Default for UmSegments {
